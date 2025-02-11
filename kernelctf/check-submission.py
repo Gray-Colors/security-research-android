@@ -131,6 +131,8 @@ def flagTarget(flag):
     # v2 flag
     return match.group(2)
 
+
+#flags = ["android-12-x64-12182466"]
 flagTargets = set([flagTarget(flag) for flag in flags])
 if "mitigation-6.1-v2" in flagTargets:
     flagTargets = flagTargets - {"mitigation-6.1-v2"} | {"mitigation-6.1"}
