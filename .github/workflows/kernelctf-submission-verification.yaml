@@ -130,7 +130,7 @@ jobs:
           
       - name: download and setup KVM for android kernel
         id: setup_android
-        if: contains(matrix.target, "android")
+        if: ${{ contains(matrix.target, 'android') }}
         run: |
           sudo apt install -y dpkg git devscripts equivs config-package-dev debhelper-compat golang curl
           git clone https://github.com/google/android-cuttlefish
@@ -145,7 +145,7 @@ jobs:
           cvd fetch "$BUILD_ID/aosp_cf_x86_64_phone-userdebug"
           
       - name: download android kernel
-        if: contains(matrix.target, "android") && steps.setup_android.outcome == 'success'
+        if: ${{ contains(matrix.target, 'android') }}
         run: cvd fetch "$BUILD_ID/aosp_cf_x86_64_phone-userdebug"
 
       - name: Install tools (QEMU, inotify, expect)
