@@ -57,6 +57,12 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${ARGS[@]}"
 
+tmp="$RELEASE_PATH"
+while [[ "$tmp" == *\"* ]]; do
+  tmp="${tmp//\"}"
+done
+RELEASE_PATH="$tmp"
+
 if [ ! -d "$RELEASE_PATH/../locks" ]; then
     pwd
     mkdir "$RELEASE_PATH/../locks"
