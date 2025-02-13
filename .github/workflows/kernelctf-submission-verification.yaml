@@ -68,6 +68,14 @@ jobs:
       - name: List files
         run: find .
 
+      - name: Setup NDK for android kernel
+        if: ${{ contains(matrix.target, 'android') }}
+        working-directory: ${{ env.EXPLOIT_DIR }}
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
+          unzip android-ndk-r27c-linux.zip
+          mv android-ndk-r27c/ ndk/
+
       - name: Backup original exploit
         run: mv $EXPLOIT_DIR/exploit ./
 
@@ -105,7 +113,7 @@ jobs:
         run: printf '❌ The exploit compilation failed.\n\nPlease fix it.\n\nYou can see the build logs by clicking on `...` here and then on "View job logs". Or by selecting `exploit_build (${{ env.RELEASE_ID }})` under Jobs in the left menubar.\n' >> $GITHUB_STEP_SUMMARY
 
   exploit_repro:
-    runs-on: ubuntu-22.04-4core
+    runs-on: ubuntu-latest
     timeout-minutes: 300
     permissions: {}
     needs: [structure_check, exploit_build]
@@ -128,34 +136,27 @@ jobs:
         with:
           ref: master
 
-      - name: download and setup KVM for android kernel
-        id: setup_android
-        if: contains(matrix.target, "android")
-        run: |
-          sudo apt install -y dpkg git devscripts equivs config-package-dev debhelper-compat golang curl
-          git clone https://github.com/google/android-cuttlefish
-          cd android-cuttlefish
-          tools/buildutils/build_packages.sh
-          sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
-          sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
-          usermod -aG kvm,cvdnetwork,render $USER
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-          cvd fetch "$BUILD_ID/aosp_cf_x86_64_phone-userdebug"
-
-      - name: download android kernel
-        if: contains(matrix.target, "android") && steps.setup_android.outcome == 'success'
-        run: cvd fetch "$BUILD_ID/aosp_cf_x86_64_phone-userdebug"
-
-      - name: Install tools (QEMU, inotify, expect)
-        run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 inotify-tools expect
 
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+          
+      - name: download and setup KVM for android kernel
+        id: setup_android
+        if: ${{ contains(matrix.target, 'android') }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y dpkg git devscripts equivs config-package-dev debhelper-compat golang curl
+          wget https://storage.googleapis.com/kernelctf-build/files/cuttlefish/cuttlefish-base_1.0.0_amd64.deb
+          wget https://storage.googleapis.com/kernelctf-build/files/cuttlefish/cuttlefish-user_1.0.0_amd64.deb
+          sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
+          sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
+          sudo usermod -aG kvm,cvdnetwork,render $USER
+          cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
+
+      - name: Install tools (QEMU, inotify, expect)
+        run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 inotify-tools expect
 
       - name: Download exploit
         uses: actions/download-artifact@v4
@@ -164,13 +165,13 @@ jobs:
           path: ./kernelctf/repro/exp/
 
       - name: Fetch rootfs
-        if: !contains(matrix.target, "android")
+        if: ${{ !contains(matrix.target, 'android') }}
         run: |
           wget -O rootfs.img.gz https://storage.googleapis.com/kernelctf-build/files/rootfs_repro_v2.img.gz
           gzip -d rootfs.img.gz
 
       - name: Download bzImage
-        if: !contains(matrix.target, "android")
+        if: ${{ !contains(matrix.target, 'android') }}
         run: |
           if [ "$RELEASE_ID" == "mitigation-6.1" ]; then RELEASE_ID="mitigation-6.1-v2"; fi
           wget https://storage.googleapis.com/kernelctf-build/releases/$RELEASE_ID/bzImage
@@ -257,17 +258,3 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{secrets.KERNELCTF_GCS_SA_KEY}}'
-
-      - name: Upload artifacts to GCS
-        uses: 'google-github-actions/upload-cloud-storage@v2'
-        with:
-          path: ./artifacts
-          destination: kernelctf-build/artifacts/${{ needs.structure_check.outputs.artifact_backup_dir }}_${{ github.run_id }}
-          parent: false
-          predefinedAcl: publicRead
-          process_gcloudignore: false # removes warnings that .gcloudignore file does not exist
