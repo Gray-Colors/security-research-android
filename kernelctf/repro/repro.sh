@@ -39,7 +39,6 @@ if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
     echo " THIS IS BACK"
     ls ..
     echo " THIS IS exploit"
-    ls exploit
     echo pwd
     pwd
     echo $SUBMISSION_DIR
