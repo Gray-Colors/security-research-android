@@ -38,7 +38,7 @@ if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
     pwd
     ls
     ls ..
-    expect -c "../cuttlefish.sh --release_path=$RELEASE_ID --bin_path=exploit_$RELEASE_ID --flag_fn=flag" | tee $QEMU_TXT | sed $'s/\r//' &
+    expect -c "spawn ../cuttlefish.sh --release_path=$RELEASE_ID --bin_path=exploit_$RELEASE_ID --flag_fn=flag" | tee $QEMU_TXT | sed $'s/\r//' &
     QEMU_PID="$!"
 elif [[ $RELEASE_ID =~ ^((lts-[0-9]+.[0-9]+(\\.[0-9]+)?)|(mitigation-(v[0-9]+[a-z]?-)?[0-9]+\\.[0-9]+(\\.[0-9]+)?)|(cos-[0-9]{2,}-[0-9]+\\.[0-9]+\\.[0-9]+)|extra-.*)$ ]]; then
     expect -c '
