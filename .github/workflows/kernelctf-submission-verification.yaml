@@ -158,8 +158,8 @@ jobs:
         if: ${{ contains(matrix.target, 'android') }}
         working-directory: ${{ env.EXPLOIT_DIR }}
         run: |
-          pwd;ls
-          cd kernelctf
+          mkdir $RELEASE_ID
+          cd $RELEASE_ID
           cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
