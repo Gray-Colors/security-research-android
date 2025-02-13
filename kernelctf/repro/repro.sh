@@ -35,18 +35,14 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
-    ls
-    echo " THIS IS BACK"
-    ls ..
-    echo " THIS IS exploit"
-    echo pwd
+    ls $SUBMISSION_DIR
     pwd
     echo $SUBMISSION_DIR
     expect -c '
         set timeout -1
         set stty_init raw
 
-        spawn ../cuttlefish.sh --release_path="'"$RELEASE_ID"'" --bin_path="'"$SUBMISSION_DIR/exploit/$RELEASE_ID"'" --flag_path="'"repro/flag"'"
+        spawn ../cuttlefish.sh --release_path="'"$SUBMISSION_DIR/$RELEASE_ID"'" --bin_path="'"$SUBMISSION_DIR/exploit/$RELEASE_ID"'" --flag_path="'"repro/flag"'"
 
         expect "# "
         send "id\n"
