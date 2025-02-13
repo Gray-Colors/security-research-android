@@ -39,7 +39,7 @@ if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
         set timeout -1
         set stty_init raw
 
-        spawn ../cuttlefish.sh --release_path="'"$RELEASE_ID"'" --bin_path="'"exploit_$RELEASE_ID"'" --flag_fn="'"repro/flag"'"
+        spawn ../cuttlefish.sh --release_path="'"$RELEASE_ID"'" --bin_path="'"$SUBMISSION_DIR/exploit/$RELEASE_ID"'" --flag_path="'"repro/flag"'"
 
         expect "# "
         send "id\n"
