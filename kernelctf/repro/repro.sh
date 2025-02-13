@@ -35,7 +35,11 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
-    ls $SUBMISSION_DIR
+    ls ..
+    echo TESTTESTTEST
+    ls ../pocs/linux/kernelctf/
+    echo TESTTESTTEST
+    ls ../pocs/linux/kernelctf/$SUBMISSION_DIR
     pwd
     echo $SUBMISSION_DIR
     expect -c '
