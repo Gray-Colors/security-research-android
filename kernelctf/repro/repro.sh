@@ -35,6 +35,14 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
+    ls
+    echo " THIS IS BACK"
+    ls ..
+    echo " THIS IS exploit"
+    ls exploit
+    echo pwd
+    pwd
+    echo $SUBMISSION_DIR
     expect -c '
         set timeout -1
         set stty_init raw
