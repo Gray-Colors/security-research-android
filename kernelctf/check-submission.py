@@ -27,7 +27,7 @@ checkAtLeastOne(prFiles, "There are no files in the submission")
 prFiles = checkList(prFiles, lambda f: f.startswith(POC_FOLDER), f"The following files are outside of the `{POC_FOLDER}` folder which is not allowed")
 
 subDirName = checkOnlyOne(subdirEntries(prFiles, POC_FOLDER), "Only one submission is allowed per PR. Found multiple submissions")
-checkRegex(subDirName, r"^CVE-\d+-\d+(_lts|_cos|_mitigation)+(_\d+)?$", f"The submission folder name is invalid (`{subDirName}`)")
+checkRegex(subDirName, r"^CVE-\d+-\d+(_lts|_cos|_mitigation|_android)+(_\d+)?$", f"The submission folder name is invalid (`{subDirName}`)")
 
 print(f"[-] Processing submission... Folder = {subDirName}")
 cve, *targets = subDirName.split('_')
@@ -70,8 +70,11 @@ if schemaVersionM:
 
         schemaVersion = MIN_SCHEMA_VERSION
 
-    schemaUrl = f"https://google.github.io/security-research/kernelctf/metadata.schema.v{schemaVersion}.json"
-    schema = json.loads(fetch(schemaUrl, f"metadata.schema.v{schemaVersion}.json"))
+    #schemaUrl = f"https://google.github.io/security-research/kernelctf/metadata.schema.v{schemaVersion}.json"
+    #schema = json.loads(fetch(schemaUrl, f"metadata.schema.v{schemaVersion}.json"))
+    cwd = os.getcwd()
+    print(cwd)
+    with open(f"../kernelctf/metadata.schema.v{schemaVersion}.json", "rt") as f: schema = json.loads(f.read())
 
     metadataErrors = list(jsonschema.Draft202012Validator(schema).iter_errors(metadata))
     if len(metadataErrors) > 0:
@@ -132,7 +135,7 @@ def flagTarget(flag):
     return match.group(2)
 
 
-#flags = ["android-12-x64-12182466"]
+flags = ["kernelCTF{v1:android-12-x64-12182466:1739151644}"]
 flagTargets = set([flagTarget(flag) for flag in flags])
 if "mitigation-6.1-v2" in flagTargets:
     flagTargets = flagTargets - {"mitigation-6.1-v2"} | {"mitigation-6.1"}
