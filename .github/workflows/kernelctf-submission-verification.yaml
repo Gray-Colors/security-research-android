@@ -143,7 +143,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
           
-      - name: download and setup KVM for android kernel
+      - name: download and setup KVM and cuttlefish
         id: setup_android
         if: ${{ contains(matrix.target, 'android') }}
         run: |
@@ -153,6 +153,11 @@ jobs:
           sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
           sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
           sudo usermod -aG kvm,cvdnetwork,render $USER
+
+      - name: download target android kernel
+        if: ${{ contains(matrix.target, 'android') }}
+        working-directory: ${{ env.EXPLOIT_DIR }}
+        run: |
           cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
