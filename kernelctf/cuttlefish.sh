@@ -58,6 +58,7 @@ done
 set -- "${ARGS[@]}"
 
 if [ ! -d "$RELEASE_PATH/../locks" ]; then
+    pwd
     mkdir "$RELEASE_PATH/../locks"
 fi
 
