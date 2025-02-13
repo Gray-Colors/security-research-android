@@ -36,17 +36,15 @@ echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
     pwd
+    ls
+    echo TESTTESTTEST
     ls ..
-    echo TESTTESTTEST
     ls ../../pocs/linux/kernelctf/
-    echo TESTTESTTEST
-    ls ../pocs/linux/kernelctf/$SUBMISSION_DIR
-    echo $SUBMISSION_DIR
     expect -c '
         set timeout -1
         set stty_init raw
 
-        spawn ../cuttlefish.sh --release_path="'"$SUBMISSION_DIR/$RELEASE_ID"'" --bin_path="'"$SUBMISSION_DIR/exploit/$RELEASE_ID"'" --flag_path="'"repro/flag"'"
+        spawn ../cuttlefish.sh --release_path="'"../../pocs/linux/kernelctf/$SUBMISSION_DIR/$RELEASE_ID"'" --bin_path="'"../../pocs/linux/kernelctf/$SUBMISSION_DIR/exploit/$RELEASE_ID"'" --flag_path="'"flag"'"
 
         expect "# "
         send "id\n"
