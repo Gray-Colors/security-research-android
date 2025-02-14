@@ -35,7 +35,7 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
-    expect -c '
+    sudo --user "$USER" --preserve-env --preserve-env=PATH -- env -- expect -c '
         set timeout -1
         set stty_init raw
 
