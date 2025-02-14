@@ -164,6 +164,7 @@ jobs:
         if: ${{ contains(matrix.target, 'android') }}
         run: |
           sudo mkdir /android
+          sudo chown $USER:$USER /android
           sudo chmod 755 /android
           
       - name: download target android kernel
