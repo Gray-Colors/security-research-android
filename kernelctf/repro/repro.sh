@@ -35,16 +35,12 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
-    ls ../..
-    echo TESTINGTESTING
-    ls ..
-    echo TESTINGTESTING
-    ls ../../..
+    cd ../..
     sudo --user "$USER" --preserve-env --preserve-env=PATH -- env -- expect -c '
         set timeout -1
         set stty_init raw
 
-        spawn ../cuttlefish.sh --release_path='"../../a"' --bin_path=./exp/exploit --flag_path=flag
+        spawn kernelctf/cuttlefish.sh --release_path=a --bin_path=kernelctf/repro/exp/exploit --flag_path=kernelctf/repro/flag
 
         expect "# "
         send "id\n"
