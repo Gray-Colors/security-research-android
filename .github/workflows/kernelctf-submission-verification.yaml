@@ -152,12 +152,13 @@ jobs:
           sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
           sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
           sudo usermod -aG kvm,cvdnetwork,render $USER
-          su - $USER
+          groups
 
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
         working-directory: ./kernelctf/repro/
         run: |
+          groups
           mkdir $RELEASE_ID
           cd $RELEASE_ID
           cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
