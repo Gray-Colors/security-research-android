@@ -151,6 +151,10 @@ jobs:
           wget https://storage.googleapis.com/kernelctf-build/files/cuttlefish/cuttlefish-user_1.0.0_amd64.deb
           sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
           sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
+
+      - name: setup groups for cvd
+        if: ${{ contains(matrix.target, 'android') }}
+        run: |
           sudo usermod -aG kvm $USER
           sudo usermod -aG render $USER
           sudo usermod -aG cvdnetwork $USER
