@@ -162,7 +162,9 @@ jobs:
 
       - name: create tmp dir
         if: ${{ contains(matrix.target, 'android') }}
-        run: mkdir /android
+        run: |
+          sudo mkdir /android
+          sudo chmod /android 755
           
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
