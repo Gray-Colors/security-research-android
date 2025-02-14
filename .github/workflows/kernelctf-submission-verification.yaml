@@ -166,10 +166,11 @@ jobs:
           sudo mkdir /android
           sudo chown $USER:$USER /android
           sudo chmod 755 /android
+          mkdir /android/a
           
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
-        working-directory: /android
+        working-directory: /android/a
         run: cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
