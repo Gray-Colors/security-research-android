@@ -165,6 +165,7 @@ jobs:
         run: |
           mkdir a
           cd a
+          pwd
           cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
