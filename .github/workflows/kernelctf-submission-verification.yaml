@@ -152,8 +152,7 @@ jobs:
           sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
           sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
           sudo usermod -aG kvm,cvdnetwork,render $USER
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
+          newgrp kvm
 
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
