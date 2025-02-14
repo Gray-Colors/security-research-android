@@ -162,7 +162,7 @@ jobs:
 
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
-        working-directory: pr
+        working-directory: .
         run: |
           mkdir a
           cd a
