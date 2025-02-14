@@ -160,11 +160,14 @@ jobs:
           sudo usermod -aG cvdnetwork $USER
           sudo -s -u ${USER} bash -c 'whoami && groups'
 
+      - name: create tmp dir
+        if: ${{ contains(matrix.target, 'android') }}
+        run: mkdir /tmp
+          
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
         working-directory: /tmp
-        run: |
-          cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
+        run: cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
         run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 inotify-tools expect
