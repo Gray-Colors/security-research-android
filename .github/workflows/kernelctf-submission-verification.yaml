@@ -162,10 +162,8 @@ jobs:
 
       - name: download target android kernel
         if: ${{ contains(matrix.target, 'android') }}
-        working-directory: ..
+        working-directory: /tmp
         run: |
-          mkdir a
-          cd a
           cvd fetch --default_build ${RELEASE_ID:(-8)}/aosp_cf_x86_64_phone-userdebug
 
       - name: Install tools (QEMU, inotify, expect)
