@@ -35,7 +35,11 @@ fi
 echo $CMDLINE
 
 if [[ $RELEASE_ID =~ android-[0-9]{2}-x64-[0-9]{8} ]]; then
-    pwd
+    ls ../..
+    echo TESTINGTESTING
+    ls ..
+    echo TESTINGTESTING
+    ls ../../..
     sudo --user "$USER" --preserve-env --preserve-env=PATH -- env -- expect -c '
         set timeout -1
         set stty_init raw
