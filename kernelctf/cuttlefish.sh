@@ -107,6 +107,9 @@ as_root="$RELEASE_PATH/bin/adb -s 0.0.0.0:$port_number shell su root"
 sleep 20
 echo "TESTING DEVICES"
 $RELEASE_PATH/bin/adb devices -l
+sleep 20
+
+$RELEASE_PATH/bin/adb devices -l
 
 # Setup flag file
 FLAG=$(<$FLAG_FN)
