@@ -105,6 +105,7 @@ on_guest="$RELEASE_PATH/bin/adb -s 0.0.0.0:$port_number"
 as_root="$RELEASE_PATH/bin/adb -s 0.0.0.0:$port_number shell su root"
 
 # Sleep to wait for daemon to start
+$RELEASE_PATH/bin/adb devices -l
 sleep 10
 
 # Setup flag file
