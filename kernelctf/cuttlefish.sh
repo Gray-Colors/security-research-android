@@ -119,7 +119,7 @@ PORT_TO_USE=$(expr $instance_num + 7000)
 pipe_name=$(mktemp -u)
 mkfifo "$pipe_name"
 
-$on_guest install $RELEASE_PATH/../app-debug.apk
+$on_guest install ./../app-debug.apk
 $as_root "am start -n com.example.api029_java_port_test/.MainActivity -e server_port $PORT_TO_USE"
 $on_guest forward tcp:$PORT_TO_USE tcp:$PORT_TO_USE
 
